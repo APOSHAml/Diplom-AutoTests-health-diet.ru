@@ -1,9 +1,11 @@
+import uuid
+
+import allure
 import pytest
-from pages.base_page import BasePage
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import allure
-import uuid
+
+from pages.base_page import BasePage
 
 
 @pytest.fixture(scope="function")
@@ -22,7 +24,11 @@ def driver():
 
     yield driver
     try:
-        allure.attach(driver.get_screenshot_as_png(), name=f"Screenshot Picture/{str(uuid.uuid4())}", attachment_type=allure.attachment_type.PNG)
+        allure.attach(
+            driver.get_screenshot_as_png(),
+            name=f"Screenshot Picture/{str(uuid.uuid4())}",
+            attachment_type=allure.attachment_type.PNG,
+        )
 
     except Exception as e:
         print(f"Fail make screenshot {e}")

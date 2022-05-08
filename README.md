@@ -28,4 +28,5 @@ How To Run Tests
     pytest -v -s --alluredir=%allure_result_folder% ./tests
     allure serve %allure_result_folder%
     ```
+    
 
