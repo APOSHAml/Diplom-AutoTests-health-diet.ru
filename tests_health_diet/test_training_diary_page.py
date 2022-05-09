@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from pages.base_page import res
+import allure
+
+from pages.base_page import URI, path_to_root_project
 from pages.edit_recipe_page import LocatorsEditRecipePage as LER
 from pages.edit_training_diary_page import EditTrainingDiaryPage
 from pages.edit_training_diary_page import \
@@ -21,11 +23,11 @@ import pytest
 
 
 @pytest.mark.dependency(name="create_edit_training")
-def test_create_edit_training(driver, login_accaunt):
+def test_create_edit_training(driver):
     """testing the creation of a training and its use, as well as its appearance in the schedule"""
 
     with allure.step("Кликаем на кнопку создания своей тренировки и заполняем данные"):
-        edit_training_page = EditTrainingDiaryPage(driver, login_accaunt)
+        edit_training_page = EditTrainingDiaryPage(driver, url=URI)
 
         edit_training_page.send_keys(LETD.name_training, "NameTraining")
         edit_training_page.to_select(LETD.select_part_of_muscle, "5")
@@ -52,7 +54,7 @@ def test_create_edit_training(driver, login_accaunt):
         edit_training_page.click(LETD.click_add_foto_exercise)
         edit_training_page.wait_until_not_visible(LETD.add_foto_exercise)
         edit_training_page.upload_file(
-            LETD.add_foto_exercise, (str(res) + str(Path("/beef.png")))
+            LETD.add_foto_exercise, (str(path_to_root_project) + str(Path("/beef.png")))
         )
         edit_training_page.wait_until_not_visible(LETD.img_foto_load, timeout=200)
         edit_training_page.click(LETD.save_button_foto)
@@ -82,13 +84,13 @@ def test_create_edit_training(driver, login_accaunt):
         )
 
 
-def test_my_filtr_exercises(driver, login_accaunt):
+def test_my_filtr_exercises(driver):
     """testing the filter of the exercise program"""
 
     with allure.step(
         "Кликаем в базе на вкладку программы и далее на кнопку подобрать программу "
     ):
-        training_diary_page = TrainingDiaryPage(driver, login_accaunt)
+        training_diary_page = TrainingDiaryPage(driver)
         training_diary_page.wait_until_not_visible(LTD.other_category_post, timeout=30)
         training_diary_page.click(LTD.tab_programms, LTD.button_choose_program)
     with allure.step(
@@ -103,11 +105,11 @@ def test_my_filtr_exercises(driver, login_accaunt):
 
 
 @pytest.mark.dependency(depends=["create_edit_training"])
-def test_delete_record_training(driver, login_accaunt):
+def test_delete_record_training(driver):
     """testing deleting a training record"""
 
     with allure.step("Удаляем запись тренировки в дневнике "):
-        training_diary_page = TrainingDiaryPage(driver, login_accaunt)
+        training_diary_page = TrainingDiaryPage(driver)
         training_diary_page.wait_until_not_visible(LTD.still_button)
         training_diary_page.click(LTD.still_button, LTD.icon_trash)
         assert "Дневник тренировок пуст" == training_diary_page.get_text(
@@ -116,11 +118,11 @@ def test_delete_record_training(driver, login_accaunt):
 
 
 @pytest.mark.dependency(depends=["create_edit_training"])
-def test_delete_my_training(driver, login_accaunt):
+def test_delete_my_training(driver):
     """testing deleting my training"""
 
     with allure.step("Удаляем нашу тренировку"):
-        training_diary_page = TrainingDiaryPage(driver, login_accaunt)
+        training_diary_page = TrainingDiaryPage(driver)
 
         training_diary_page.wait_until_not_visible(LTD.other_category_post, timeout=30)
         training_diary_page.click(LTD.other_category_post)

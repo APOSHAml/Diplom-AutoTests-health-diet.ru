@@ -1,8 +1,11 @@
+from email.errors import MessageError
 from pathlib import Path
 from time import sleep
 
-from selenium.common.exceptions import (NoSuchElementException,
-                                        StaleElementReferenceException)
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -20,17 +23,24 @@ clas = By.CLASS_NAME
 name = By.NAME
 xpath = By.XPATH
 tag = By.TAG_NAME
-idi = By.ID
-links = By.LINK_TEXT
+id_ = By.ID
+link_ = By.LINK_TEXT
 
-res = Path(__file__).resolve().parents[1]
 
-with open(str(res) + str(Path("/login_user.txt")), "r", encoding="utf-8-sig") as fp:
+path_to_root_project = Path(__file__).resolve().parents[1]
+
+with open(
+    str(path_to_root_project) + str(Path("/login_user.txt")), "r", encoding="utf-8-sig"
+) as fp:
     login_user = fp.read().rstrip()
 
-with open(str(res) + str(Path("/passwd_user.txt")), "r", encoding="utf-8-sig") as fp:
+with open(
+    str(path_to_root_project) + str(Path("/passwd_user.txt")), "r", encoding="utf-8-sig"
+) as fp:
     passwd_user = fp.read().rstrip()
 
+
+URI = "https://health-diet.ru"
 
 login_button = (By.CSS_SELECTOR, 'a[class="uk-button uk-button-outline-transparent"]')
 login = (By.ID, "login")
@@ -45,11 +55,12 @@ class BasePage:
     def open(self):
         raise NotImplementedError
 
-    def open_sign_in(self, url: str = "https://health-diet.ru"):
+    def open_sign_in(self, url: str):
         """Log in with the account."""
 
         self.get_url(url)
-        self.click(login_button)
+        if url == URI:
+            self.click(login_button)
         self.send_keys(login, login_user)
         self.send_keys(passwd, passwd_user)
         self.click(submit_account)
@@ -107,8 +118,7 @@ class BasePage:
                 ).click(on_element=element).perform()
 
             else:
-                msg = "Element with locator {0} not found"
-                print(msg.format(locator))
+                print(f"Element with locator {locator} not found")
 
     def wait_to_be_clickable(
         self,
@@ -125,7 +135,7 @@ class BasePage:
             ).until(EC.element_to_be_clickable(locator))
 
         except Exception:
-            print("Element not clickable!")
+            print(f"Element {locator} not clickable!")
 
         if check_visibility:
             self.wait_until_not_visible(locator)
@@ -143,7 +153,7 @@ class BasePage:
             return False
 
     def is_presented(self, locator: tuple):
-        """Check that element is presented on the page."""
+        """Checks that the element is present on the page."""
 
         element = True
         try:
@@ -200,7 +210,7 @@ class BasePage:
             ).until(EC.text_to_be_present_in_element(locator, keys))
 
         except Exception:
-            print("Element Element not visible!!")
+            print(f"Element {locator} not visible!!")
 
     def send_keys(self, locator: tuple, keys: str, wait=0, click=True):
         """Send keys to the element."""
@@ -285,8 +295,7 @@ class BasePage:
             ).context_click(on_element=element).perform()
 
         else:
-            msg = "Element with locator {0} not found"
-            print(msg.format(locator))
+            print(f"Element {locator} not visible!!")
 
     def highlight_and_make_screenshot(self, locator: tuple, file_name="element.png"):
         """Highlight element and make the screen-shot of all page."""

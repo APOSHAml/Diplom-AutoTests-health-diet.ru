@@ -1,26 +1,29 @@
 import os
 
-from pages.base_page import BasePage, clas, css, idi, links, name, tag, xpath
+from pages.base_page import URI, BasePage, clas, css, id_, link_, name, tag, xpath
 
 
 class MainPage(BasePage):
-    def __init__(self, driver, login_accaunt, url=""):
+    def __init__(self, driver, login_accaunt=True, url=""):
+
         if not url:
-            url = os.getenv("MAIN_URL") or "https//health-diet.ru"
+            url = f"{URI}/account/login"
         super().__init__(driver)
-        if login_accaunt is None or login_accaunt == True:
-            login_accaunt
+        if login_accaunt:
+            self.open_sign_in(url)
+        if url and not login_accaunt:
+            self.get_url(url)
 
 
 name_account = (css, '[title="Сергей"]')
 
 tab_food_diary = (name, "bowl")
 
-tab_training = (links, "Тренировки")
+tab_training = (link_, "Тренировки")
 
-tab_weght_measurement = (links, "Вес и измерения")
+tab_weght_measurement = (link_, "Вес и измерения")
 
-tab_weght_measurement = (links, "Отчеты")
+tab_weght_measurement = (link_, "Отчеты")
 
 bell_opening = (name, "bell")
 

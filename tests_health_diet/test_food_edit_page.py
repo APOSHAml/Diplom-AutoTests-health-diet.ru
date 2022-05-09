@@ -1,5 +1,7 @@
+import allure
 import pytest
 
+from pages.base_page import URI
 from pages.food_diary_page import FoodDiaryPage
 from pages.food_diary_page import LocatorsFoodDiaryPage as LFD
 from pages.food_edit_page import (FoodEditPage, barcode_food, button_go_back,
@@ -14,11 +16,11 @@ from pages.food_edit_page import (FoodEditPage, barcode_food, button_go_back,
 
 
 @pytest.mark.dependency(name="name_edit_discription_food")
-def test_name_edit_discription_food(driver, login_accaunt):
+def test_name_edit_discription_food(driver):
     """testing the creation of a food and its use, as well as its appearance in the schedule"""
 
     with allure.step("Кликаем на кнопку создание своего продукта и заполняем данные"):
-        food_edit_page = FoodEditPage(driver, login_accaunt)
+        food_edit_page = FoodEditPage(driver, url=URI)
         food_edit_page.wait_until_not_visible(input_name_food)
         food_edit_page.send_keys(input_name_food, "NameProduct")
         food_edit_page.click(select_food_manufacturer)
@@ -50,11 +52,11 @@ def test_name_edit_discription_food(driver, login_accaunt):
 
 
 @pytest.mark.dependency(depends=["name_edit_discription_food"])
-def test_description_my_food(driver, login_accaunt):
+def test_description_my_food(driver):
     """testing the description my food"""
 
     with allure.step("Кликаем в базе на наш продукт и проверяем его описание "):
-        food_diary_page = FoodDiaryPage(driver, login_accaunt)
+        food_diary_page = FoodDiaryPage(driver)
         food_diary_page.click(
             LFD.my_foods, LFD.name_my_manufacturer_select_category, LFD.name_my_product
         )
@@ -69,11 +71,11 @@ def test_description_my_food(driver, login_accaunt):
 
 
 @pytest.mark.dependency(depends=["name_edit_discription_food"])
-def test_delete_record_food(driver, login_accaunt):
+def test_delete_record_food(driver):
     """testing delete my record_food"""
 
     with allure.step("Удаление записи нашего продукта из дневника "):
-        food_diary_page = FoodDiaryPage(driver, login_accaunt)
+        food_diary_page = FoodDiaryPage(driver)
         food_diary_page.text_to_present_in_element(LFD.title_food, "NameProduct")
         food_diary_page.wait_to_be_clickable(LFD.title_food)
         food_diary_page.click(LFD.title_food, LFD.delete_record_my_food)
@@ -83,11 +85,11 @@ def test_delete_record_food(driver, login_accaunt):
 
 
 @pytest.mark.dependency(depends=["name_edit_discription_food"])
-def test_delete_my_food(driver, login_accaunt):
+def test_delete_my_food(driver):
     """testing delete my food"""
 
     with allure.step("Проверяем удаление нашего продукта"):
-        food_diary_page = FoodDiaryPage(driver, login_accaunt)
+        food_diary_page = FoodDiaryPage(driver)
         food_diary_page.click(
             LFD.my_foods,
             LFD.name_my_manufacturer_select_category,

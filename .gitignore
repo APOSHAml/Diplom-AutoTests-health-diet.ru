@@ -21,3 +21,4 @@ db.sqlite3
 htmlcov/
 zsh-syntax-highlighting/
 reposts
+newfile.log

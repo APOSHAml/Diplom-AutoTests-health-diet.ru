@@ -1,4 +1,4 @@
-from pages.base_page import BasePage, clas, css, idi, name, tag, xpath
+from pages.base_page import URI, BasePage, clas, css, id_, name, tag, xpath
 from pages.food_diary_page import LocatorsFoodDiaryPage as LFD
 from pages.main_page import tab_food_diary
 
@@ -6,22 +6,23 @@ from pages.main_page import tab_food_diary
 class EditRecipePage(BasePage):
     """To disable login_account, the attribute must have the False flag"""
 
-    def __init__(self, driver, login_accaunt, url=""):
-        if not url:
-            url = "https://health-diet.ru/diary/recipeEdit/new"
+    def __init__(self, driver, login_accaunt=True, url=""):
 
+        if not url:
+            url = f"{URI}/account/login"
         super().__init__(driver)
-        self.driver = driver
-        if login_accaunt is None or login_accaunt == True:
-            login_accaunt
+        if login_accaunt:
+            self.open_sign_in(url)
             self.click(tab_food_diary)
             self.wait_to_be_clickable(LFD.my_recipes)
             self.click(LFD.button_create_recipe)
+        if url and not login_accaunt:
+            self.get_url(url)
 
 
 class LocatorsEditRecipePage:
 
-    input_name_recipe = (idi, "form-recipe-name")
+    input_name_recipe = (id_, "form-recipe-name")
     input_select_category = (
         css,
         'div[class="uk-form-controls uk-position-relative"]>input[type="text"]',
@@ -31,7 +32,7 @@ class LocatorsEditRecipePage:
     second_courses = (css, '[value="Вторые блюда"]')
     input_name_cours = (css, '[value="Roast beef"]')
 
-    description = (
+    tab_description = (
         css,
         'div[class=" mzr-pointer uk-flex-item-none mzr-font--body14sb mzr-pointer uk-flex-item-none uk-margin-right "]',
     )
