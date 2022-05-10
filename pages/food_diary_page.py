@@ -68,7 +68,8 @@ class LocatorsFoodDiaryPage:
     button_delete_favourites = (name, "starIn")
     text_favourites = (css, 'div[class="mzr-tree-node mod-padding-element"]')
     empty_favourites = (css, 'div[class=" uk-text-center mzr-font--body13reg"]')
-
+    my_diary_favourites = (css, 'div[class="mzr-tree-node mod-padding-element"]')
+    subscription_offer = (css, 'div[class="mzr-main-block"] > div > div > div > div[class]')
     schedule_add_favourites = (
         css,
         "div.mzr-block-menu.mzr-no-print > div:nth-child(3) > span",

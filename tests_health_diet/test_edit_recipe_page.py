@@ -10,7 +10,7 @@ from pages.food_diary_page import FoodDiaryPage
 from pages.food_diary_page import LocatorsFoodDiaryPage as LFD
 
 empty_favourites_text = "Здесь появятся продукты и блюда, которые вы отметите как “Избранное”. Это позволит вам заполнять дневник на 30% быстрее!"
-
+warning_add_favourites = 'Добавление продуктов и дневников из раздела "Избранное" доступно только в полной версии. Подробнее в разделе "Подписка"'
 expected_list = [
     "Roast beef",
     "129 ккал",
@@ -169,9 +169,27 @@ def test_delete_favourites(driver):
             LFD.my_roast_beef,
             LFD.button_delete_favourites,
             LFD.my_favourites,
+            LFD.tab_favourites,
+            
         )
 
         assert empty_favourites_text == food_diary_page.get_text(LFD.empty_favourites)
+    
+
+def test_delete_favourites_in_base_version_site(driver):
+    """testing delete diary from favorites in base version site"""
+
+    with allure.step(
+        "Нажимаем во вкладке 'Мое' в избранном на наш дневник питания, и проверяем невозможность его удаления "
+    ):
+        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page.click(
+            LFD.my_favourites,
+            LFD.tab_favourites,
+            LFD.my_diary_favourites,
+        )
+
+        assert warning_add_favourites == food_diary_page.get_text(LFD.subscription_offer)
 
 
 @pytest.mark.dependency(depends=["name_recipe_second_cours"])
@@ -251,4 +269,4 @@ def test_delete_my_recipe(driver):
         food_diary_page.wait_until_not_visible(LFD.my_recipes)
         food_diary_page.click(LFD.my_recipes)
 
-        assert not food_diary_page.is_visible(LFD.my_recipes_select_category)
+#         assert not food_diary_page.is_visible(LFD.my_recipes_select_category)

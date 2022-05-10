@@ -51,6 +51,6 @@ Run unstable tests:
     @pytest.mark.dependency(depends={name_main_test}): marker for dependent tests from the main ones with the attribute 'depends'
     ```
 
-* The log file is created and overwritten in the root of the project
+* The browser logs are located in the root of the project
 
 

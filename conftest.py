@@ -1,11 +1,10 @@
 import uuid
-import logging
 import allure
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from pages.base_page import path_to_root_project, Path
-
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 
@@ -16,9 +15,9 @@ def pytest_addoption(parser):
                      help="Choose browser: chrome or firefox")
     parser.addoption('--language', action='store', default="ru",
                      help="Choose language: ru or en")
-    logging.basicConfig(filename=str(path_to_root_project) + str(Path("/newfile.log")),
-                    format='%(asctime)s %(message)s',
-                    filemode='w')
+
+
+
 
 @pytest.fixture(scope="function")
 def driver(request):
@@ -29,8 +28,6 @@ def driver(request):
     chrome_options.add_argument('--headless')
     """
 
-    logger=logging.getLogger()
-    logger.setLevel(logging.DEBUG)
     browser_name = request.config.getoption("browser_name")
     user_language = request.config.getoption("language")
     driver = None
@@ -38,6 +35,8 @@ def driver(request):
     options.add_argument("start-maximized")
     if browser_name == "chrome":
         print("\nstart chrome browser for test..")
+        d = DesiredCapabilities.CHROME
+        options.set_capability("goog:loggingPrefs", {'browser': 'ALL'})
         options.add_argument(f"--lang={user_language}")
         driver = webdriver.Chrome(options=options)
     elif browser_name == "firefox":
@@ -60,4 +59,10 @@ def driver(request):
 
     except Exception as e:
         print(f"Fail make screenshot {e}")
+    
+    with open(str(path_to_root_project) + str(Path("/newfile.log")), 'w') as f:
+        for log in driver.get_log('browser'):
+        
+            f.write(str(log) + "\n")
+            
     driver.quit()
