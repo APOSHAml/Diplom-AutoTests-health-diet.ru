@@ -1,11 +1,8 @@
-from email.errors import MessageError
 from pathlib import Path
 from time import sleep
 
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    StaleElementReferenceException,
-)
+from selenium.common.exceptions import (NoSuchElementException,
+                                        StaleElementReferenceException)
 from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -108,8 +105,7 @@ class BasePage:
                     start += 1
 
             else:
-                msg = "Element with locator {0} not found"
-                print(msg.format(locator))
+                print(f"Element with locator {locator} not found")
 
             if element:
                 action = ActionChains(self.driver)
@@ -182,7 +178,7 @@ class BasePage:
             ).until(EC.visibility_of_element_located(locator))
 
         except Exception:
-            print("Element Element not visible!!")
+            print(f"Element {locator} not visible!!")
 
         if element:
             js = (
@@ -212,17 +208,23 @@ class BasePage:
         except Exception:
             print(f"Element {locator} not visible!!")
 
-    def send_keys(self, locator: tuple, keys: str, wait=0, click=True):
+    def send_keys(self, locator: tuple, keys: str, wait=0.3, click=False):
         """Send keys to the element."""
 
-        sleep(wait)
         if element := self.find(locator):
             if click:
 
                 self.wait_to_be_clickable(locator)
-                element.click()
 
-            element.clear()
+                element.click()
+                sleep(wait)
+                element.clear()
+                sleep(wait)
+
+            else:
+                sleep(wait)
+                element.clear()
+
             keys = keys.replace("\n", "")
             element.send_keys(keys)
 

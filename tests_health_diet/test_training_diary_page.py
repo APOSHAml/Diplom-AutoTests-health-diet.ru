@@ -27,7 +27,7 @@ def test_create_edit_training(driver):
     """testing the creation of a training and its use, as well as its appearance in the schedule"""
 
     with allure.step("Кликаем на кнопку создания своей тренировки и заполняем данные"):
-        edit_training_page = EditTrainingDiaryPage(driver, url=URI)
+        edit_training_page = EditTrainingDiaryPage(driver, login_accaunt=True, url=URI)
 
         edit_training_page.send_keys(LETD.name_training, "NameTraining")
         edit_training_page.to_select(LETD.select_part_of_muscle, "5")
@@ -63,7 +63,7 @@ def test_create_edit_training(driver):
     with allure.step(
         "Кликаем на нашу тренировку в базе и проверяем отображение загруженной ранее картинки и других данных "
     ):
-        training_diary_page = TrainingDiaryPage(driver, login_accaunt=False)
+        training_diary_page = TrainingDiaryPage(driver)
         training_diary_page.wait_until_not_visible(LTD.other_category_post, timeout=30)
         training_diary_page.click(
             LTD.other_category_post, LTD.my_name_training_category
@@ -90,7 +90,7 @@ def test_my_filtr_exercises(driver):
     with allure.step(
         "Кликаем в базе на вкладку программы и далее на кнопку подобрать программу "
     ):
-        training_diary_page = TrainingDiaryPage(driver)
+        training_diary_page = TrainingDiaryPage(driver, login_accaunt=True)
         training_diary_page.wait_until_not_visible(LTD.other_category_post, timeout=30)
         training_diary_page.click(LTD.tab_programms, LTD.button_choose_program)
     with allure.step(
@@ -109,7 +109,7 @@ def test_delete_record_training(driver):
     """testing deleting a training record"""
 
     with allure.step("Удаляем запись тренировки в дневнике "):
-        training_diary_page = TrainingDiaryPage(driver)
+        training_diary_page = TrainingDiaryPage(driver, login_accaunt=True)
         training_diary_page.wait_until_not_visible(LTD.still_button)
         training_diary_page.click(LTD.still_button, LTD.icon_trash)
         assert "Дневник тренировок пуст" == training_diary_page.get_text(
@@ -122,7 +122,7 @@ def test_delete_my_training(driver):
     """testing deleting my training"""
 
     with allure.step("Удаляем нашу тренировку"):
-        training_diary_page = TrainingDiaryPage(driver)
+        training_diary_page = TrainingDiaryPage(driver, login_accaunt=True)
 
         training_diary_page.wait_until_not_visible(LTD.other_category_post, timeout=30)
         training_diary_page.click(LTD.other_category_post)

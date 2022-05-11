@@ -6,18 +6,22 @@ from pages.main_page import tab_food_diary
 class EditRecipePage(BasePage):
     """To disable login_account, the attribute must have the False flag"""
 
-    def __init__(self, driver, login_accaunt=True, url=""):
+    def __init__(self, driver, login_accaunt=False, url=""):
 
-        if not url:
-            url = f"{URI}/account/login"
         super().__init__(driver)
-        if login_accaunt:
+        if login_accaunt and url:
             self.open_sign_in(url)
             self.click(tab_food_diary)
             self.wait_to_be_clickable(LFD.my_recipes)
             self.click(LFD.button_create_recipe)
-        if url and not login_accaunt:
+        if not login_accaunt and url:
             self.get_url(url)
+        if login_accaunt and not url:
+            url = f"{URI}/account/login"
+            self.open_sign_in(url)
+            self.click(tab_food_diary)
+            self.wait_to_be_clickable(LFD.my_recipes)
+            self.click(LFD.button_create_recipe)
 
 
 class LocatorsEditRecipePage:

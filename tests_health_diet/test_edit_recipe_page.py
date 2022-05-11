@@ -26,7 +26,7 @@ expected_list = [
 def test_name_recipe_second_cours(driver):
     """testing the creation of a recipe and its use in food, as well as its appearance in the schedule"""
 
-    recipe_edit_page = EditRecipePage(driver, url=URI)
+    recipe_edit_page = EditRecipePage(driver, login_accaunt=True, url=URI)
 
     with allure.step("Кликаем на верхнюю кнопку создать рецепт и заполняем данные"):
         recipe_edit_page.click(LER.tab_description)
@@ -43,7 +43,7 @@ def test_name_recipe_second_cours(driver):
         )
         recipe_edit_page.click(LER.foto_turn, count=4)
         recipe_edit_page.click(LER.button_load_foto)
-        recipe_edit_page.send_keys(LER.input_hours, "2", click=False)
+        recipe_edit_page.send_keys(LER.input_hours, "2")
         recipe_edit_page.text_to_present_in_element(
             LER.description_select_ingredient, "не выбрано"
         )
@@ -92,7 +92,8 @@ def test_name_recipe_second_cours(driver):
         )
 
     with allure.step("Кликаем на запись в дневнике и проверяем введенные даные"):
-        food_diary_page = FoodDiaryPage(driver, login_accaunt=False)
+        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page.wait_until_not_visible(LFD.title_food, timeout=30)
         food_diary_page.click(LFD.title_food, LFD.chemical_composition_sign)
         food_diary_page.wait_until_not_visible(LFD.foto_ingredient_chemical_composition)
         food_diary_page.wait_until_not_visible(LFD.foto_steps_chemical_composition)
@@ -110,11 +111,6 @@ def test_name_recipe_second_cours(driver):
         assert expected_list == actual_list
 
 
-# assert all(
-#     x in actual_list for x in expected_list
-# )
-
-
 @pytest.mark.dependency(depends=["name_recipe_second_cours"])
 def test_description_my_recipe(driver):
     """testing my recipe description"""
@@ -122,7 +118,7 @@ def test_description_my_recipe(driver):
     with allure.step(
         "Кликаем в правой базе свой рецепт и сверяем вес, калории и порцию"
     ):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.click(
             LFD.my_recipes, LFD.my_recipes_select_category, LFD.my_roast_beef
         )
@@ -143,7 +139,7 @@ def test_add_favourites(driver):
     with allure.step(
         "Нажимаем добаdить в избранное наш рецепт, и проверяем его наличие во вкладке 'Мое' "
     ):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.click(
             LFD.my_recipes,
             LFD.my_recipes_select_category,
@@ -162,7 +158,7 @@ def test_delete_favourites(driver):
     with allure.step(
         "Нажимаем удалить из избранного наш рецепт, и проверяем его отсутсвие во вкладке 'Мое' "
     ):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.click(
             LFD.my_recipes,
             LFD.my_recipes_select_category,
@@ -170,11 +166,10 @@ def test_delete_favourites(driver):
             LFD.button_delete_favourites,
             LFD.my_favourites,
             LFD.tab_favourites,
-            
         )
 
         assert empty_favourites_text == food_diary_page.get_text(LFD.empty_favourites)
-    
+
 
 def test_delete_favourites_in_base_version_site(driver):
     """testing delete diary from favorites in base version site"""
@@ -182,14 +177,16 @@ def test_delete_favourites_in_base_version_site(driver):
     with allure.step(
         "Нажимаем во вкладке 'Мое' в избранном на наш дневник питания, и проверяем невозможность его удаления "
     ):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.click(
             LFD.my_favourites,
             LFD.tab_favourites,
             LFD.my_diary_favourites,
         )
 
-        assert warning_add_favourites == food_diary_page.get_text(LFD.subscription_offer)
+        assert warning_add_favourites == food_diary_page.get_text(
+            LFD.subscription_offer
+        )
 
 
 @pytest.mark.dependency(depends=["name_recipe_second_cours"])
@@ -197,7 +194,7 @@ def test_schedule_add_favourites(driver):
     """testing schedule adding my recipe to favorites"""
 
     with allure.step("Добавление в график избранного рецепт "):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.click(
             LFD.schedule_add_favourites, LFD.select_dinner, LER.save_button
         )
@@ -214,7 +211,7 @@ def test_search_ingredients_and_recipes(driver):
     with allure.step(
         "Вводим в поле поиска название рецепта и проверяем его в результатах проверки "
     ):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.wait_until_not_visible(LFD.search_ingredients_and_pecipes)
         food_diary_page.send_keys(LFD.search_ingredients_and_pecipes, "Roast beef")
 
@@ -229,7 +226,7 @@ def test_invalid_search_ingredients_and_pecipes(driver):
     with allure.step(
         "Вводим в поле поиска несуществуещее название рецепта и проверяем пустой результат поиска "
     ):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.wait_until_not_visible(LFD.search_ingredients_and_pecipes)
         food_diary_page.send_keys(LFD.search_ingredients_and_pecipes, "ololololo")
 
@@ -243,7 +240,7 @@ def test_delete_record_recipe(driver):
     """testing delete record my recipes"""
 
     with allure.step("Удаление записи рецепта"):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.text_to_present_in_element(LFD.title_food, "Roast beef")
         food_diary_page.click(LFD.title_food)
         food_diary_page.click(LFD.delete_record_my_food)
@@ -258,7 +255,7 @@ def test_delete_my_recipe(driver):
     """testing delete my recipe"""
 
     with allure.step("Удаление нашего рецепта"):
-        food_diary_page = FoodDiaryPage(driver)
+        food_diary_page = FoodDiaryPage(driver, login_accaunt=True)
         food_diary_page.click(
             LFD.my_recipes,
             LFD.my_recipes_select_category,
@@ -267,6 +264,5 @@ def test_delete_my_recipe(driver):
             LFD.button_notice_delete,
         )
         food_diary_page.wait_until_not_visible(LFD.my_recipes)
-        food_diary_page.click(LFD.my_recipes)
 
-#         assert not food_diary_page.is_visible(LFD.my_recipes_select_category)
+        assert not food_diary_page.is_visible(LFD.my_recipes_select_category)

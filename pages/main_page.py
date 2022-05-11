@@ -1,18 +1,18 @@
-import os
-
-from pages.base_page import URI, BasePage, clas, css, id_, link_, name, tag, xpath
+from pages.base_page import (URI, BasePage, clas, css, id_, link_, name, tag,
+                             xpath)
 
 
 class MainPage(BasePage):
-    def __init__(self, driver, login_accaunt=True, url=""):
+    def __init__(self, driver, login_accaunt=False, url=""):
 
-        if not url:
-            url = f"{URI}/account/login"
         super().__init__(driver)
-        if login_accaunt:
+        if login_accaunt and url:
             self.open_sign_in(url)
-        if url and not login_accaunt:
+        if not login_accaunt and url:
             self.get_url(url)
+        if login_accaunt and not url:
+            url = f"{URI}/account/login"
+            self.open_sign_in(url)
 
 
 name_account = (css, '[title="Сергей"]')

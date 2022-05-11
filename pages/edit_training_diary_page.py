@@ -1,4 +1,5 @@
-from pages.base_page import URI, BasePage, clas, css, id_, link_, name, tag, xpath
+from pages.base_page import (URI, BasePage, clas, css, id_, link_, name, tag,
+                             xpath)
 from pages.main_page import tab_training
 from pages.training_diary_page import LocatorsTrainingDiaryPage as LTD
 
@@ -6,18 +7,22 @@ from pages.training_diary_page import LocatorsTrainingDiaryPage as LTD
 class EditTrainingDiaryPage(BasePage):
     """To disable login_account, the attribute must have the False flag"""
 
-    def __init__(self, driver, login_accaunt=True, url=""):
+    def __init__(self, driver, login_accaunt=False, url=""):
 
-        if not url:
-            url = f"{URI}/account/login"
         super().__init__(driver)
-        if login_accaunt:
+        if login_accaunt and url:
             self.open_sign_in(url)
             self.click(tab_training)
             self.wait_to_be_clickable(LTD.other_category_post)
             self.click(LTD.button_create_training)
-        if url and not login_accaunt:
+        if not login_accaunt and url:
             self.get_url(url)
+        if login_accaunt and not url:
+            url = f"{URI}/account/login"
+            self.open_sign_in(url)
+            self.click(tab_training)
+            self.wait_to_be_clickable(LTD.other_category_post)
+            self.click(LTD.button_create_training)
 
 
 class LocatorsEditTrainingDiaryPage:

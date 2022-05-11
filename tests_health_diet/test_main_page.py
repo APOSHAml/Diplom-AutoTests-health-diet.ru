@@ -9,7 +9,7 @@ from pages.main_page import (MainPage, bell_opening, close_message_window,
 def test_name_accaunt(driver):
     """testing the account name"""
 
-    main_page = MainPage(driver, url=URI)
+    main_page = MainPage(driver, login_accaunt=True, url=URI)
     name_accaunt = main_page.get_text(name_account)
     with allure.step("После входа в аккаунт, проверяем имя пользователя"):
         assert "Сергей" == name_accaunt, f"Name accaunt is {name_accaunt}"
@@ -18,7 +18,7 @@ def test_name_accaunt(driver):
 def test_bell_opening(driver):
     """testing notifications"""
 
-    main_page = MainPage(driver)
+    main_page = MainPage(driver, login_accaunt=True)
     with allure.step(
         "Кликаем по колокольчику для вызова окна сообщений и проверяем что оно отображается"
     ):
@@ -36,5 +36,5 @@ def test_dots_three_vertical(driver):
     """testing three points are vertical"""
 
     with allure.step("Проверяем, что кнопка 'три точки' кликабельна"):
-        main_page = MainPage(driver)
+        main_page = MainPage(driver, login_accaunt=True)
         assert main_page.is_clickable(dots_three_vertical)

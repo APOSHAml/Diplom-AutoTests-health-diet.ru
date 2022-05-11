@@ -5,16 +5,18 @@ from pages.main_page import tab_food_diary
 class FoodDiaryPage(BasePage):
     """To disable sign in login_account, the attribute must have the False flag"""
 
-    def __init__(self, driver, login_accaunt=True, url=""):
+    def __init__(self, driver, login_accaunt=False, url=""):
 
-        if not url:
-            url = f"{URI}/account/login"
         super().__init__(driver)
-        if login_accaunt:
+        if login_accaunt and url:
             self.open_sign_in(url)
             self.click(tab_food_diary)
-        if url and not login_accaunt:
+        if not login_accaunt and url:
             self.get_url(url)
+        if login_accaunt and not url:
+            url = f"{URI}/account/login"
+            self.open_sign_in(url)
+            self.click(tab_food_diary)
 
 
 class LocatorsFoodDiaryPage:
@@ -69,7 +71,10 @@ class LocatorsFoodDiaryPage:
     text_favourites = (css, 'div[class="mzr-tree-node mod-padding-element"]')
     empty_favourites = (css, 'div[class=" uk-text-center mzr-font--body13reg"]')
     my_diary_favourites = (css, 'div[class="mzr-tree-node mod-padding-element"]')
-    subscription_offer = (css, 'div[class="mzr-main-block"] > div > div > div > div[class]')
+    subscription_offer = (
+        css,
+        'div[class="mzr-main-block"] > div > div > div > div[class]',
+    )
     schedule_add_favourites = (
         css,
         "div.mzr-block-menu.mzr-no-print > div:nth-child(3) > span",
