@@ -43,6 +43,12 @@ Run unstable tests:
     pytest -v -s  --tb=line --reruns {count reruns} --browser_name={chrome or firefox} {path_to_tests}
 
     ```
+Run BDD tests:
+
+    ```
+    pytest --gherkin-terminal-reporter {path_to_bdd_tests} -vv -s 
+
+    ```
 
 * Marks.dependency:
    
